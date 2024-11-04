@@ -1,0 +1,53 @@
+Generation of PWM
+#include <p18f4550.h>
+#include <stdlib.h>
+#pragma config PLLDIV = 5
+#pragma config CPUDIV = OSC1_PLL2
+#pragma config USBDIV = 2
+#pragma config FOSC = HSPLL_HS
+#pragma config VREGEN = ON
+#pragma config WDT = OFF
+#pragma config PBADEN = OFF
+#pragma config LVP = OFF
+
+void myMsDelay(unsigned int time)
+{
+    unsigned int i, j;
+    for (i = 0; i < time; i++)
+        for (j = 0; j < 710; j++);
+}
+
+void main()
+{
+    TRISCbits.TRISC2 = 0;
+    TRISCbits.TRISC6 = 0;
+    TRISCbits.TRISC7 = 0;
+    PR2 = 0xBA;
+    CCP1CON = 0x0C;
+    T2CON = 0x07;
+    PORTCbits.RC6 = 1;
+    PORTCbits.RC7 = 0;
+
+    while (1)
+    {
+        CCP1CONbits.DC1B0 = 0;
+        CCP1CONbits.DC1B1 = 0;
+        CCPR1L = 0x96;
+        myMsDelay(2000);
+
+        CCP1CONbits.DC1B0 = 0;
+        CCP1CONbits.DC1B1 = 1;
+        CCPR1L = 0x70;
+        myMsDelay(2000);
+
+        CCP1CONbits.DC1B0 = 0;
+        CCP1CONbits.DC1B1 = 0;
+        CCPR1L = 0x4B;
+        myMsDelay(2000);
+
+        CCP1CONbits.DC1B0 = 0;
+        CCP1CONbits.DC1B1 = 1;
+        CCPR1L = 0x25;
+        myMsDelay(2000);  
+}
+}

@@ -1,0 +1,62 @@
+                                      Relay,leds,buzzer with PIC microcontroller
+
+#include <p18f4550.h>
+#pragma config PLLDIV =5 
+#pragma config CPUDIV = OSC1_PLL2
+#pragma config USBDIV = 2 
+#pragma config FOSC = HSPLL_HS
+#pragma config VREGEN = ON 
+#pragma config WDT = OFF 
+#pragma config PBADEN = OFF 
+#pragma config LVP = OFF 
+
+#include "vector_relocate.h"
+
+void MsDelay (unsigned int time) 
+{
+	unsigned int i,j;
+	for (i =0;i< time; i++) 
+		for(j=0;j<710; j++);
+}
+#define lrbit PORTBbits.RB1
+#define rlbit PORTBbits.RB2
+#define buzzer PORTCbits.RC2
+#define relay PORTCbits.RC1
+#define relay1 PORTCbits.RC0
+
+void main() 
+{
+	 unsigned char val=0;
+		unsigned int k;
+	INTCON2bits.RBPU=0;
+		ADCON1 = 0x0F;
+		TRISBbits.TRISB4=1;
+		TRISBbits.TRISB5=1;
+		TRISCbits.TRISC1=0;
+		TRISCbits.TRISC2=0;
+		TRISD = 0x00;
+		PORTD = 0x00;
+		buzzer = 0;
+		relay = 0;
+		relay1 =0;
+			
+				while (!(lrbit))
+				{
+					buzzer = 1;
+					relay =1;
+					relay1= 1;
+					PORTD = PORTD>>1;
+					 if (PORTD==0x00)
+					 		PORTD==0x80;
+					 		MsDelay(250);
+					}
+					 while (!(rlbit))
+					 {
+						 buzzer =0;
+							relay =0 ;
+					 		relay1 = 0;
+					 		PORTD = PORTD<<1;
+					 		if (PORTD==0x00)
+					 			PORTD= 0x01;
+					 		MsDelay(250);
+					 		}

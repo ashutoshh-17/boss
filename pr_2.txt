@@ -1,0 +1,84 @@
+1] DAC Squarewave  generation.
+#include <reg51.h>
+void MSDelay(unsigned int);
+void main(void)
+{
+while (1) //repeat forever
+{
+P1=0x55;
+MSDelay(250);
+P1=0xAA;
+MSDelay(250);
+}
+}
+void MSDelay(unsigned int itime)
+{
+unsigned int i,j;
+for (i=0;i<itime;i++)
+for (j=0;j<1275;j++);
+}
+2] Triangular Wave Generation
+#include<reg51.h>
+void delay(unsigned int);
+void main(void)
+{
+   while(1)          // infinite loop
+  {
+       unsigned int x;
+       for(;;)         //repeat forever
+
+  {
+       for(x=0;x<250;x++)
+           {
+                P1=x;
+               delay(100);
+           }
+
+       for(x=250;x>0;x--)
+           {
+                P1=x;
+              delay(100);
+          }
+      }
+}
+   }
+void delay(unsigned int time)
+{
+unsigned int i,j;
+for(i=0;i<time;i++)
+for(j=0;j<1275;j++);
+}
+
+
+3] Ramp Wave Generation
+#include<reg51.h>
+void main()
+{unsigned int i;
+while(1)
+{for(i=0;i<256;i++)
+{
+P2=i;
+}
+}
+}
+
+4]Square wave generation using timer
+#include <reg51.h>
+void T0M1Delay(void);
+sbit mybit=P1^5;
+void main(void){
+while (1) {
+mybit=~mybit;
+T0M1Delay();
+}
+}
+void T0M1Delay(void){
+TMOD=0x01;
+TL0=0x00;
+TH0=0x00;
+TR0=1;
+while (TF0==0);
+TR0=0;
+TF0=0;
+}
+

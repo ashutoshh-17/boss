@@ -1,0 +1,100 @@
+1]LED ON/OFF:
+#include <reg51.h>
+//delay function declaration
+void delay(void);
+void main(void)
+{
+//an infinite loop
+while(1)
+{
+// Turn ON all LED's connected to Port1
+P1 = 0xFF;
+delay();
+// Turn OFF all LED's connected to Port1
+P1 = 0x00;
+delay();
+}
+}
+//delay function definition
+void delay(void)
+{
+int i,j;
+for(i=0;i<0xff;i++)
+for(j=0;j<0xff;j++);
+}
+
+2] One LED flashing using 8051
+#include<reg52.h>           // special function register declarations
+                                            // for the intended 8051 derivative
+sbit LED = P2^0;            // Defining LED pin
+
+void Delay(void);           // Function prototype declaration
+
+void main (void)
+{
+    while(1)                // infinite loop
+    {
+        LED = 0;            // LED ON
+        Delay();
+        LED = 1;            // LED OFF
+        Delay();
+    }
+}
+
+void Delay(void)
+{
+    int j;
+    int i;
+    for(i=0;i<10;i++)
+    {
+        for(j=0;j<10000;j++)
+        {
+        }
+    }
+}
+
+
+
+3]4-bit Binary
+#include<reg52.h>
+	void delay(){
+	unsigned int i,j;
+	for(i=0;i< 500;i++)
+	for(j=0;j< 1000;j++);   }
+	void main(){
+	unsigned int count;
+	while(1){
+	for(count=0;count<=100;count++)
+	P1=count;
+	delay();
+	}
+	}
+
+4] Flashing using LED
+#include<reg51.h>
+void delay(){
+unsigned int i,j;
+for(i=0;i< 500;i++)
+for(j=0;j< 1000;j++);
+}
+void main(){
+while(1){
+delay(); P2=0x01;  
+delay(); P1=0x02;
+delay(); P2=0x03;  
+delay(); P1=0x04;
+delay(); P1=0x05; 
+delay(); P1=0x06;
+delay(); P2=0x07; 
+delay(); P1=0x08;
+delay(); P1=0x09; 
+delay(); P2=0x0A;
+delay(); P1=0x0B; 
+delay(); P1=0x0C;
+delay(); P2=0x0D; 
+delay(); P1=0x0E;
+delay(); P2=0x0F; 
+delay();
+}
+}
+

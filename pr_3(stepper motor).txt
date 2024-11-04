@@ -1,0 +1,29 @@
+Practical 3 stepper motor…
+
+#include <reg51.h>  
+void delay(void); 
+void main(void)
+{
+while(1)
+{
+P1=0xCC;
+delay();
+P1=0x66;
+delay();
+P1=0x33;
+delay();
+P1=0x99;
+delay();  
+}
+  }
+void delay()
+{
+TMOD=0x01; // timer 0 ,mode 1(16 bit)  
+TL0=0xFD;// load TL0
+TH0=0x4B;  
+TR0=1;
+while(TF0==0);// wait for TF0 to roll over 
+ TR0=0;
+TF0=0;
+}
+

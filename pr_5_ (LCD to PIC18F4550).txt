@@ -1,0 +1,116 @@
+interfacing of LCD to PIC18F4550 microcontroller
+
+#include <p18f4550.h>
+#include "vector_relocate.h"	
+#pragma config PLLDIV = 5 
+#pragma config CPUDIV = OSC1_PLL2
+#pragma config USBDIV = 2 
+#pragma config FOSC = HSPLL_HS
+#pragma config VREGEN = ON 
+#pragma config WDT = OFF
+#pragma config PBADEN = OFF
+#pragma config LVP = OFF
+
+#define LCD_DATA    PORTD               
+#define ctrl        PORTE               
+#define en          PORTEbits.RE2      
+#define rw          PORTEbits.RE1      
+#define rs          PORTEbits.RE0     
+#define BUSY        PORTDbits.RD7
+
+void LCD_Busy(void);
+void LCD_cmd(unsigned char cmd);
+void init_LCD(void);
+void LCD_write(unsigned char data);
+void LCD_write_string(static char *str);
+
+void myMsDelay (unsigned int time)
+{
+        unsigned int i, j;
+        for (i = 0; i < time; i++)
+                for (j = 0; j < 710; j++);/Calibrated for a 1 ms delay in MPLAB/
+}
+
+
+void display_string_LCD(static char *pstring1, static char *pstring2)
+{
+     ADCON1 = 0x0F;        
+     TRISD = 0x00;         
+     TRISE = 0x00;         
+	
+    
+     init_LCD();           
+     myMsDelay(50);       
+   
+     LCD_write_string(pstring1);
+     myMsDelay(15);
+
+     LCD_cmd(0xC0);      
+     LCD_write_string(pstring2); 
+      
+     myMsDelay(1000);
+     return;
+}
+
+void init_LCD(void)
+{
+    LCD_cmd(0x38);      
+    myMsDelay(15);
+
+    LCD_cmd(0x01);      
+    myMsDelay(15);
+
+    LCD_cmd(0x0C);      
+    myMsDelay(15);
+
+    LCD_cmd(0x80);      
+    myMsDelay(15);
+
+
+    return;
+}
+
+void LCD_cmd(unsigned char cmd)
+{
+    LCD_DATA = cmd;
+    rs = 0;
+    rw = 0;
+    en = 1;
+    myMsDelay(15);
+    en = 0;
+    myMsDelay(15);
+    return;
+}
+
+void LCD_write(unsigned char data)
+{
+    LCD_DATA = data;
+    rs = 1;
+    rw = 0;
+    en = 1;
+    myMsDelay(15);
+    en = 0;
+    myMsDelay(15);
+    return ;
+}
+
+void LCD_write_string(static char *str)   
+{
+    int i = 0;
+    while (str[i] != 0)
+    {
+        LCD_write(str[i]);      
+        myMsDelay(15);
+                i++;
+    }
+    return;
+}
+
+void main(void)
+{     
+        char var1[] = "RMDSSOE Warje";
+        char var2[] = "TE E&TC";
+	
+        display_string_LCD(var1, var2);
+        while (1);
+}

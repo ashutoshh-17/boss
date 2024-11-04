@@ -1,0 +1,46 @@
+Square wave generation using interrupt
+
+#include <p18f4550.h>
+#pragma config PLLDIV =5
+#pragma config CPUDIV =OSC1_PLL2
+#pragma config USBDIV =2
+#pragma config FOSC   =HSPLL_HS
+#pragma config VREGEN =ON
+#pragma config WDT    =OFF
+#pragma config PBADEN =OFF
+#pragma config LVP    =OFF
+#include<stdlib.h>
+
+void myDelay (unsigned int time);
+#pragma code
+#pragma interrupt timer_isr
+void timer_isr(void)
+{
+	TMR0H = 0X48;
+	TMR0L = 0XE5;
+	PORTB = ~PORTB;
+	INTCONbits.TMR0IF = 0;
+	
+}
+void main()
+{
+	ADCON1 = 0x0f;
+	TRISB = 0;
+	PORTB=0x0f;
+	T0CON = 0x07;
+	TMR0H = 0x48;
+	TMR0L = 0xE5;
+	INTCONbits.TMR0IF = 0;
+	INTCONbits.TMR0IE = 1;
+	T0CONbits.TMR0ON = 1;
+	INTCONbits.GIE = 1;
+	
+	while(1)
+	{
+		while(!INTCONbits.TMR0IF);
+		TMR0H = 0X48;
+		TMR0L = 0XE5;
+		PORTB = ~PORTB;
+		INTCONbits.TMR0IF = 0;
+		}
+		}
